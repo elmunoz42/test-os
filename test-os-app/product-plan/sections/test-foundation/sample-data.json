@@ -1,0 +1,183 @@
+{
+  "_meta": {
+    "models": {
+      "phase": "The overall state of the Test Foundation wizard — tracks whether the foundation is in progress, fully confirmed, or locked. One phase object per Test OS workspace.",
+      "step": "A single wizard step within the foundation phase. Contains the generated artifact content, user-editable fields, and completion status. Steps are ordered and sequentially locked.",
+      "editableField": "A single user-editable key-value field within a step. Fields surface the most important parameters from the generated artifact so users can adjust them without editing raw file content."
+    },
+    "relationships": [
+      "A phase has exactly 5 steps, ordered 1 through 5",
+      "A step belongs to one phase",
+      "A step has 2–5 editableFields depending on its artifact type",
+      "Steps unlock sequentially: step N+1 becomes active only after step N is confirmed"
+    ]
+  },
+  "phase": {
+    "id": "test-foundation",
+    "status": "in_progress",
+    "lockedAt": null,
+    "currentStepIndex": 1
+  },
+  "steps": [
+    {
+      "id": "test-charter",
+      "order": 1,
+      "label": "Test Charter",
+      "command": "/test-charter",
+      "artifact": "charter.md",
+      "status": "complete",
+      "confirmedAt": "2026-05-30T14:23:00Z",
+      "description": "Define what 'correct' means for this application, the validation scope, and risk priorities that determine coverage depth.",
+      "generatedContent": "# Test Charter\n\n## Application Under Test\nTest OS — the independent validation layer for Design OS + Agent OS builds.\n\n## Definition of Correct\nThe application correctly validates build behavior when: (1) all acceptance criteria in Agent OS specs produce passing test cases, (2) failure modes and edge cases caught by Test OS do not pass in the build, (3) oracle values match actual output without hardcoding.\n\n## Scope\n- All screens and flows defined in the Design OS product roadmap\n- API endpoints exercised by those flows\n- Authentication and session management\n- Oracle-matched expected values for form submissions and data display\n\n## Out of Scope\n- Performance benchmarking\n- Accessibility (separate audit)\n- Third-party integrations beyond the app boundary\n\n## Risk Priorities\n| Area | Priority | Rationale |\n|---|---|---|\n| Oracle matching | Critical | Core anti-gaming value prop |\n| Auth flows | High | Security surface |\n| Data display | High | Verdict correctness depends on it |\n| Navigation | Medium | Covered by visible tests |\n| Settings | Low | Low churn, low risk |",
+      "editableFields": [
+        {
+          "key": "appName",
+          "label": "Application Name",
+          "value": "Test OS",
+          "type": "text"
+        },
+        {
+          "key": "scopeDescription",
+          "label": "Scope Description",
+          "value": "All screens and flows defined in the Design OS product roadmap, API endpoints exercised by those flows, authentication and session management, oracle-matched expected values for form submissions and data display.",
+          "type": "textarea"
+        },
+        {
+          "key": "riskLevel",
+          "label": "Overall Risk Level",
+          "value": "high",
+          "type": "select",
+          "options": ["low", "medium", "high", "critical"]
+        }
+      ]
+    },
+    {
+      "id": "coverage-map",
+      "order": 2,
+      "label": "Coverage Map",
+      "command": "/test-roadmap",
+      "artifact": "coverage-map.md",
+      "status": "active",
+      "confirmedAt": null,
+      "description": "Mirror the app roadmap into a coverage map of epics and sections, one validation suite per section. This becomes the skeleton of the TEST-MANIFEST.json.",
+      "generatedContent": "# Coverage Map\n\n## Epic 1: Test Foundation\n- Section: Charter & Scope\n- Section: Coverage Map\n- Section: Oracle Data\n- Section: Test Standards\n- Section: Hermes Harness\n\n## Epic 2: Section Validation\n- Section: Suite Scoping\n- Section: Fixture Generation\n- Section: Test Authoring\n- Section: Evidence Capture\n\n## Epic 3: Verdict & Reporting\n- Section: Validation Runner\n- Section: HTML Report\n- Section: Fix Prompts\n\n## Epic 4: Deployment & Automation\n- Section: EC2 Setup\n- Section: Cron Schedule\n- Section: Results Persistence\n\n## Coverage Notes\n- Epics 1 and 4 carry medium risk — infrastructure and setup flows\n- Epics 2 and 3 carry high risk — core value-prop flows, adversarial test scenarios required",
+      "editableFields": [
+        {
+          "key": "designOsSource",
+          "label": "Design OS Source Path",
+          "value": "../design-os/product",
+          "type": "text"
+        },
+        {
+          "key": "agentOsSource",
+          "label": "Agent OS Source Path",
+          "value": "../agent-os/specs",
+          "type": "text"
+        },
+        {
+          "key": "coverageNotes",
+          "label": "Coverage Notes",
+          "value": "Epics 1 and 4 carry medium risk. Epics 2 and 3 carry high risk and require adversarial test scenarios.",
+          "type": "textarea"
+        }
+      ]
+    },
+    {
+      "id": "oracle-data",
+      "order": 3,
+      "label": "Oracle Data",
+      "command": "/oracle-data",
+      "artifact": "oracles/*.json",
+      "status": "locked",
+      "confirmedAt": null,
+      "description": "Define golden and expected values — the anti-gaming core. Oracle fixtures are stored outside the app repo and are never visible to the build agent.",
+      "generatedContent": "{\n  \"_description\": \"Auth oracle fixtures. NEVER expose to the build agent.\",\n  \"validUser\": {\n    \"email\": \"alex.morgan@example.com\",\n    \"password\": \"Tr0ub4dor&3\",\n    \"expectedRedirect\": \"/foundation\",\n    \"expectedDisplayName\": \"Alex Morgan\",\n    \"sessionTokenPresent\": true\n  },\n  \"lockedAccount\": {\n    \"email\": \"banned.user@example.com\",\n    \"password\": \"ValidPass1!\",\n    \"expectedStatus\": 403,\n    \"expectedErrorMessage\": \"Account locked\",\n    \"sessionTokenPresent\": false\n  },\n  \"invalidCredentials\": {\n    \"email\": \"nobody@example.com\",\n    \"password\": \"WrongPass999\",\n    \"expectedStatus\": 401,\n    \"expectedErrorMessage\": \"Invalid email or password\",\n    \"sessionTokenPresent\": false\n  }\n}",
+      "editableFields": [
+        {
+          "key": "oracleStoragePath",
+          "label": "Oracle Storage Path",
+          "value": "./oracles",
+          "type": "text"
+        },
+        {
+          "key": "sensitivityLevel",
+          "label": "Sensitivity Classification",
+          "value": "restricted",
+          "type": "select",
+          "options": ["internal", "restricted", "confidential"]
+        }
+      ]
+    },
+    {
+      "id": "test-standards",
+      "order": 4,
+      "label": "Test Standards",
+      "command": "/test-standards",
+      "artifact": "standards/testing-standards.md",
+      "status": "locked",
+      "confirmedAt": null,
+      "description": "Establish testing conventions: naming patterns, assertion strictness, flake tolerance policy, and the definition of a thin assertion.",
+      "generatedContent": "# Testing Standards\n\n## Naming Conventions\n- Feature files: `[section-slug].feature`\n- Scenario IDs: `tc-[epic-number]-[sequence]-[type]` (e.g. `tc-001-happy`, `tc-001-locked`)\n- Oracle files: `oracles/[domain].json` (e.g. `oracles/auth.json`)\n\n## Assertion Strictness\n- **Behavioral assertions** — preferred; assert observable UI state, redirects, and presence/absence of elements\n- **Value assertions** — required for oracle-matched fields; assert exact string/number match\n- **Structural assertions** — optional; assert DOM structure only when layout correctness is in scope\n\n## Thin Assertion Definition\nA test is flagged as thin when: (1) the expected value is a bare constant with no oracle fixture behind it, or (2) the test passes on an empty or trivially minimal response.\n\n## Flake Policy\n- Tests must pass 3 consecutive runs before being considered stable\n- Flaky tests are quarantined (tagged `@flaky`) and excluded from the verdict until stable\n- Maximum allowed retry count: 2",
+      "editableFields": [
+        {
+          "key": "assertionStrictness",
+          "label": "Default Assertion Strictness",
+          "value": "behavioral",
+          "type": "select",
+          "options": ["loose", "behavioral", "strict"]
+        },
+        {
+          "key": "maxRetries",
+          "label": "Max Retry Count",
+          "value": "2",
+          "type": "text"
+        },
+        {
+          "key": "flakePolicy",
+          "label": "Flake Policy",
+          "value": "Flaky tests are quarantined with @flaky tag and excluded from the verdict until they pass 3 consecutive runs.",
+          "type": "textarea"
+        }
+      ]
+    },
+    {
+      "id": "hermes-config",
+      "order": 5,
+      "label": "Hermes Config",
+      "command": "/test-harness",
+      "artifact": "harness/hermes-config.json",
+      "status": "locked",
+      "confirmedAt": null,
+      "description": "Configure the Hermes executor: base URL, browser provider, screenshot capture settings, vision analysis, and request timeouts.",
+      "generatedContent": "{\n  \"appUrl\": \"http://localhost:3000\",\n  \"manifestPath\": \"../TEST-MANIFEST.json\",\n  \"screenshotDir\": \"../evidence/screenshots\",\n  \"resultsDir\": \"../runs\",\n  \"capturePriority\": [\"high\"],\n  \"maxScreenshotsPerStory\": 5,\n  \"vision\": {\n    \"enabled\": true,\n    \"analyzeLayout\": true,\n    \"flagRegressions\": true\n  },\n  \"browser\": {\n    \"provider\": \"local\",\n    \"headless\": true\n  },\n  \"timeout\": {\n    \"navigation\": 30000,\n    \"interaction\": 10000,\n    \"assertion\": 5000\n  }\n}",
+      "editableFields": [
+        {
+          "key": "appUrl",
+          "label": "App Base URL",
+          "value": "http://localhost:3000",
+          "type": "url"
+        },
+        {
+          "key": "browserProvider",
+          "label": "Browser Provider",
+          "value": "local",
+          "type": "select",
+          "options": ["local", "browserbase", "browser-use", "firecrawl"]
+        },
+        {
+          "key": "visionEnabled",
+          "label": "Vision Analysis",
+          "value": "true",
+          "type": "select",
+          "options": ["true", "false"]
+        },
+        {
+          "key": "maxScreenshotsPerStory",
+          "label": "Max Screenshots Per Story",
+          "value": "5",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
