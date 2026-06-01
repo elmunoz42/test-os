@@ -1,0 +1,161 @@
+{
+  "_meta": {
+    "models": {
+      "deploymentState": "Tracks whether the section is showing the setup wizard or the live status dashboard. Switches from 'setup' to 'deployed' once all 5 wizard steps are confirmed.",
+      "setupStep": "One of the 5 sequential wizard steps for configuring the EC2 runner. Contains copy-ready shell commands and completion state.",
+      "setupCommand": "A single shell command within a setup step. Has a human-readable label, the command string, and an optional explanatory comment.",
+      "instanceStatus": "Live metadata about the EC2 instance running the Test OS cron job — state, ID, region, and public IP.",
+      "cronConfig": "Configuration of the nightly cron schedule — the cron expression, the script path, and the last/next run timestamps.",
+      "logLine": "A single line from cron.log. Has a timestamp, severity level, and message."
+    },
+    "relationships": [
+      "A deploymentState has exactly 5 setupSteps",
+      "A setupStep has 1–4 setupCommands",
+      "A deploymentState has one instanceStatus (once deployed)",
+      "A deploymentState has one cronConfig (once deployed)",
+      "A deploymentState has many logLines (the latest run log tail)"
+    ]
+  },
+  "mode": "setup",
+  "steps": [
+    {
+      "id": "launch-ec2",
+      "order": 1,
+      "title": "Launch EC2 Instance",
+      "description": "Launch a t3.medium Ubuntu 24.04 instance tagged test-os-runner. Ensure the security group allows outbound HTTPS.",
+      "status": "complete",
+      "confirmedAt": "2026-05-30T10:14:00Z",
+      "commands": [
+        {
+          "label": "Launch instance via AWS CLI",
+          "command": "aws ec2 run-instances \\\n  --image-id ami-0c7217cdde317cfec \\\n  --instance-type t3.medium \\\n  --key-name your-key-pair \\\n  --security-group-ids sg-xxxxxxxx \\\n  --tag-specifications \\\n    'ResourceType=instance,Tags=[{Key=Name,Value=test-os-runner}]'",
+          "comment": "Or launch manually in the AWS Console — use Ubuntu 24.04, t3.medium."
+        }
+      ]
+    },
+    {
+      "id": "install-deps",
+      "order": 2,
+      "title": "Install Dependencies",
+      "description": "SSH into the instance and install Node.js, npm, git, curl, and the Hermes agent CLI.",
+      "status": "complete",
+      "confirmedAt": "2026-05-30T10:22:00Z",
+      "commands": [
+        {
+          "label": "SSH into the instance",
+          "command": "ssh -i your-key.pem ubuntu@<PUBLIC_IP>",
+          "comment": null
+        },
+        {
+          "label": "Install system dependencies",
+          "command": "sudo apt update && sudo apt install -y nodejs npm git curl",
+          "comment": null
+        },
+        {
+          "label": "Install Hermes agent globally",
+          "command": "npm install -g hermes-agent",
+          "comment": null
+        }
+      ]
+    },
+    {
+      "id": "clone-workspace",
+      "order": 3,
+      "title": "Clone Test OS Workspace",
+      "description": "Clone the Test OS repository onto the EC2 instance and install its Node dependencies.",
+      "status": "active",
+      "confirmedAt": null,
+      "commands": [
+        {
+          "label": "Clone the Test OS repo",
+          "command": "git clone https://github.com/YOUR_ORG/test-os.git ~/test-os",
+          "comment": "Replace YOUR_ORG with your GitHub organization or username."
+        },
+        {
+          "label": "Install workspace dependencies",
+          "command": "cd ~/test-os && npm install",
+          "comment": null
+        }
+      ]
+    },
+    {
+      "id": "configure-secrets",
+      "order": 4,
+      "title": "Configure Secrets",
+      "description": "Store your GitHub PAT and Hermes API key in AWS Secrets Manager. The EC2 instance IAM role must have secretsmanager:GetSecretValue permission.",
+      "status": "locked",
+      "confirmedAt": null,
+      "commands": [
+        {
+          "label": "Store GitHub token",
+          "command": "aws secretsmanager create-secret \\\n  --name test-os/github-token \\\n  --secret-string \"YOUR_GITHUB_PAT\"",
+          "comment": "The PAT needs read access to your app repo."
+        },
+        {
+          "label": "Store Hermes API key",
+          "command": "aws secretsmanager create-secret \\\n  --name test-os/hermes-config \\\n  --secret-string \"YOUR_HERMES_API_KEY\"",
+          "comment": null
+        },
+        {
+          "label": "Attach IAM policy to instance role",
+          "command": "aws iam attach-role-policy \\\n  --role-name test-os-runner-role \\\n  --policy-arn arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+          "comment": "Or attach a least-privilege policy granting only GetSecretValue on test-os/*."
+        }
+      ]
+    },
+    {
+      "id": "setup-cron",
+      "order": 5,
+      "title": "Set Up Cron Schedule",
+      "description": "Make run-tests.sh executable, do a manual smoke test, then add the nightly cron entry.",
+      "status": "locked",
+      "confirmedAt": null,
+      "commands": [
+        {
+          "label": "Make the script executable and smoke test",
+          "command": "chmod +x ~/test-os/run-tests.sh && ~/test-os/run-tests.sh",
+          "comment": "First run will clone the app, build it, and execute the suite. Expect ~5 minutes."
+        },
+        {
+          "label": "Add nightly cron entry (02:00 UTC)",
+          "command": "( crontab -l 2>/dev/null; echo \"0 2 * * * /home/ubuntu/test-os/run-tests.sh >> /home/ubuntu/test-os/cron.log 2>&1\" ) | crontab -",
+          "comment": "Confirm with: crontab -l"
+        }
+      ]
+    }
+  ],
+  "instanceStatus": {
+    "instanceId": "i-0a4f23e9d7b81c530",
+    "region": "us-east-1",
+    "state": "running",
+    "publicIp": "54.211.88.43",
+    "tag": "test-os-runner"
+  },
+  "cronConfig": {
+    "expression": "0 2 * * *",
+    "nextRunAt": "2026-06-01T02:00:00Z",
+    "lastRunAt": "2026-05-31T02:00:00Z",
+    "scriptPath": "/home/ubuntu/test-os/run-tests.sh"
+  },
+  "logLines": [
+    { "timestamp": "2026-05-31T02:00:01Z", "level": "info",  "message": "Starting Test OS run" },
+    { "timestamp": "2026-05-31T02:00:03Z", "level": "info",  "message": "Pulling latest app code from github.com/ORG/agent-os-app" },
+    { "timestamp": "2026-05-31T02:00:14Z", "level": "info",  "message": "App code pulled (11s)" },
+    { "timestamp": "2026-05-31T02:00:15Z", "level": "info",  "message": "Installing dependencies..." },
+    { "timestamp": "2026-05-31T02:00:42Z", "level": "info",  "message": "Dependencies installed (27s)" },
+    { "timestamp": "2026-05-31T02:00:43Z", "level": "info",  "message": "Building app (npm run build)..." },
+    { "timestamp": "2026-05-31T02:01:12Z", "level": "info",  "message": "Build complete (29s)" },
+    { "timestamp": "2026-05-31T02:01:13Z", "level": "info",  "message": "Starting dev server on port 3000..." },
+    { "timestamp": "2026-05-31T02:01:23Z", "level": "info",  "message": "Dev server ready (PID 28341)" },
+    { "timestamp": "2026-05-31T02:01:23Z", "level": "info",  "message": "Running Hermes validation against http://localhost:3000" },
+    { "timestamp": "2026-05-31T02:01:28Z", "level": "warn",  "message": "Vision analysis slow — browser response >2s on /foundation route" },
+    { "timestamp": "2026-05-31T02:05:12Z", "level": "info",  "message": "Hermes run complete: 55 tests, 49 passed, 6 failed (229s)" },
+    { "timestamp": "2026-05-31T02:05:13Z", "level": "info",  "message": "Generating verdict report..." },
+    { "timestamp": "2026-05-31T02:05:14Z", "level": "info",  "message": "report.html written to ~/test-os/report.html" },
+    { "timestamp": "2026-05-31T02:05:15Z", "level": "info",  "message": "Killing dev server (PID 28341)" },
+    { "timestamp": "2026-05-31T02:05:16Z", "level": "info",  "message": "Committing results to test-os repo..." },
+    { "timestamp": "2026-05-31T02:05:22Z", "level": "info",  "message": "Committed: \"Test OS verdict: 2026-05-31T02:05:22Z\"" },
+    { "timestamp": "2026-05-31T02:05:25Z", "level": "info",  "message": "Pushed to origin/main" },
+    { "timestamp": "2026-05-31T02:05:25Z", "level": "info",  "message": "Test OS run complete." }
+  ]
+}

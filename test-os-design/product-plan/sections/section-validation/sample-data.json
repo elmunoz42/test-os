@@ -1,0 +1,367 @@
+{
+  "_meta": {
+    "models": {
+      "epic": "A top-level grouping from the coverage map. Sections in the left panel are grouped under their parent epic.",
+      "sectionSuite": "One section from the coverage map, with its 4-step authoring state. The left panel lists all section suites; the right panel shows the active one.",
+      "validationStepInfo": "One of the 4 authoring steps (shape-suite, suite-fixtures, author-tests, capture-evidence) within a section suite. Tracks completion status independently.",
+      "userStory": "A behavioral story authored in the author-tests step. Has a Gherkin scenario, priority level, and a flag for screenshot capture.",
+      "screenshot": "A piece of evidence captured by Hermes for a high-priority user story. Stored in evidence/screenshots/; displayed in the capture-evidence accordion step."
+    },
+    "relationships": [
+      "An epic has many SectionSuites",
+      "A SectionSuite has exactly 4 ValidationStepInfos",
+      "A SectionSuite has many UserStories (via its author-tests step)",
+      "A UserStory may have many Screenshots",
+      "Screenshots belong to a UserStory and are associated with a SectionSuite"
+    ]
+  },
+  "activeSuiteId": "suite-007",
+  "activeStoryId": "story-003",
+  "filter": {
+    "query": "",
+    "epicId": null,
+    "status": null
+  },
+  "epics": [
+    { "id": "epic-001", "name": "Test Foundation" },
+    { "id": "epic-002", "name": "Section Validation" },
+    { "id": "epic-003", "name": "Verdict & Reporting" },
+    { "id": "epic-004", "name": "Deployment & Automation" }
+  ],
+  "suites": [
+    {
+      "id": "suite-001",
+      "name": "Charter & Scope",
+      "epicId": "epic-001",
+      "priority": "medium",
+      "lastModifiedAt": "2026-05-29T10:14:00Z",
+      "status": "complete",
+      "completedAt": "2026-05-29T10:14:00Z",
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "complete" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "complete" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "complete" }
+      ]
+    },
+    {
+      "id": "suite-002",
+      "name": "Coverage Map",
+      "epicId": "epic-001",
+      "priority": "medium",
+      "lastModifiedAt": "2026-05-29T11:45:00Z",
+      "status": "complete",
+      "completedAt": "2026-05-29T11:45:00Z",
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "complete" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "complete" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "complete" }
+      ]
+    },
+    {
+      "id": "suite-003",
+      "name": "Oracle Data",
+      "epicId": "epic-001",
+      "priority": "high",
+      "lastModifiedAt": "2026-05-30T08:02:00Z",
+      "status": "complete",
+      "completedAt": "2026-05-30T08:02:00Z",
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "complete" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "complete" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "complete" }
+      ]
+    },
+    {
+      "id": "suite-004",
+      "name": "Test Standards",
+      "epicId": "epic-001",
+      "priority": "low",
+      "lastModifiedAt": "2026-05-30T09:33:00Z",
+      "status": "in_progress",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "complete" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "in_progress" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-005",
+      "name": "Hermes Harness",
+      "epicId": "epic-001",
+      "priority": "high",
+      "lastModifiedAt": "2026-05-30T14:00:00Z",
+      "status": "in_progress",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "in_progress" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "not_started" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-006",
+      "name": "Suite Scoping",
+      "epicId": "epic-002",
+      "priority": "medium",
+      "lastModifiedAt": "2026-05-30T15:22:00Z",
+      "status": "in_progress",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "complete" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "in_progress" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-007",
+      "name": "Test Authoring",
+      "epicId": "epic-002",
+      "priority": "high",
+      "lastModifiedAt": "2026-05-31T09:18:00Z",
+      "status": "in_progress",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "complete" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "complete" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "in_progress" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-008",
+      "name": "Fixture Generation",
+      "epicId": "epic-002",
+      "priority": "high",
+      "lastModifiedAt": "2026-05-31T07:55:00Z",
+      "status": "not_started",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "not_started" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "not_started" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "not_started" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-009",
+      "name": "Evidence Capture",
+      "epicId": "epic-002",
+      "priority": "medium",
+      "lastModifiedAt": null,
+      "status": "not_started",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "not_started" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "not_started" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "not_started" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-010",
+      "name": "Validation Runner",
+      "epicId": "epic-003",
+      "priority": "high",
+      "lastModifiedAt": null,
+      "status": "not_started",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "not_started" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "not_started" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "not_started" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-011",
+      "name": "HTML Report",
+      "epicId": "epic-003",
+      "priority": "high",
+      "lastModifiedAt": null,
+      "status": "not_started",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "not_started" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "not_started" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "not_started" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    },
+    {
+      "id": "suite-012",
+      "name": "Fix Prompts",
+      "epicId": "epic-003",
+      "priority": "medium",
+      "lastModifiedAt": null,
+      "status": "not_started",
+      "completedAt": null,
+      "steps": [
+        { "id": "shape-suite",      "command": "/shape-suite",      "label": "Shape Suite",      "description": "Define scope and risk priorities for this section.", "status": "not_started" },
+        { "id": "suite-fixtures",   "command": "/suite-fixtures",   "label": "Suite Fixtures",   "description": "Generate realistic seed data tied to oracles.",     "status": "not_started" },
+        { "id": "author-tests",     "command": "/author-tests",     "label": "Author Tests",     "description": "Write Gherkin stories and executable test cases.",   "status": "not_started" },
+        { "id": "capture-evidence", "command": "/capture-evidence", "label": "Capture Evidence", "description": "Screenshot gallery for high-priority stories.",      "status": "not_started" }
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "id": "story-001",
+      "suiteId": "suite-007",
+      "title": "Author tests from /shape-suite output",
+      "description": "As a test engineer, I want to generate Gherkin stories from the shape-suite scope definition so I can review and confirm intended behaviors before authoring.",
+      "priority": "high",
+      "captureScreenshot": true,
+      "source": "design-os-success-path",
+      "gherkin": "Feature: Test Authoring from Suite Scope\n\n  Background:\n    Given Test Foundation phase is locked\n    And a suite scope has been defined for the active section\n\n  @high @captureScreenshot\n  Scenario: Generate Gherkin from scope definition\n    Given the user is on the author-tests step\n    When they trigger story generation\n    Then Gherkin scenarios are authored for each behavior in the scope\n    And each scenario is tagged with @high, @adversarial, or @edge-case\n    And each test case references an oracle fixture\n\n  @adversarial\n  Scenario: Scope with no defined behaviors produces an error\n    Given the shape-suite step has been skipped\n    When the user opens the author-tests step\n    Then an empty state is shown with a prompt to complete shape-suite first"
+    },
+    {
+      "id": "story-002",
+      "suiteId": "suite-007",
+      "title": "Select a story to view its Gherkin",
+      "description": "As a test engineer, I want to click a user story from the list and see its Gherkin rendered in a code viewer so I can review the scenario without opening a file editor.",
+      "priority": "high",
+      "captureScreenshot": true,
+      "source": "design-os-success-path",
+      "gherkin": "Feature: Story Selection and Gherkin Preview\n\n  @high @captureScreenshot\n  Scenario: Clicking a story renders its Gherkin\n    Given the author-tests accordion step is expanded\n    And at least one user story is listed\n    When the user clicks a story title\n    Then the Gherkin for that story is displayed in the preview panel\n    And the active story row is highlighted\n\n  @edge-case\n  Scenario: Story with no Gherkin yet shows a placeholder\n    Given the author-tests step has started but no tests have been written yet\n    When the user clicks the story\n    Then a placeholder message appears indicating Gherkin is being generated"
+    },
+    {
+      "id": "story-003",
+      "suiteId": "suite-007",
+      "title": "Mark a suite as complete",
+      "description": "As a test engineer, I want to mark a section suite as complete once all 4 steps are done so it no longer appears as in-progress in the left panel.",
+      "priority": "high",
+      "captureScreenshot": true,
+      "source": "design-os-success-path",
+      "gherkin": "Feature: Suite Completion\n\n  @high @captureScreenshot\n  Scenario: Mark suite complete from the right panel\n    Given all 4 accordion steps show status 'complete'\n    When the user clicks 'Mark Complete' in the right panel header\n    Then the suite status updates to 'complete' in the left panel\n    And a completion timestamp is recorded\n    And the next in-progress suite is auto-selected\n\n  @adversarial\n  Scenario: Cannot mark complete with unfinished steps\n    Given at least one accordion step has status 'not_started'\n    When the user opens the actions menu\n    Then 'Mark Complete' is disabled with a tooltip explaining why\n\n  @edge-case\n  Scenario: Marking the last suite complete triggers a phase-complete banner\n    Given all other suites are already complete\n    When the user marks this suite complete\n    Then a banner appears indicating Section Validation is fully authored\n    And Verdict & Reporting becomes accessible"
+    },
+    {
+      "id": "story-004",
+      "suiteId": "suite-007",
+      "title": "Reset a suite to re-author",
+      "description": "As a test engineer, I want to reset a section suite so I can restart the authoring flow after the section was re-implemented.",
+      "priority": "medium",
+      "captureScreenshot": false,
+      "source": "adversarial",
+      "gherkin": "Feature: Suite Reset\n\n  @adversarial\n  Scenario: Reset clears all step completions\n    Given a suite has some steps marked complete\n    When the user selects 'Reset' from the actions menu\n    And confirms the destructive action in a confirmation dialog\n    Then all 4 steps revert to 'not_started'\n    And the suite status reverts to 'not_started'\n    And all authored stories and fixtures are cleared\n\n  @edge-case\n  Scenario: Reset on a complete suite re-opens the suite for authoring\n    Given a suite is marked 'complete'\n    When the user resets it\n    Then it reappears in the left panel without a completion timestamp"
+    },
+    {
+      "id": "story-005",
+      "suiteId": "suite-007",
+      "title": "Filter suites by epic or status",
+      "description": "As a test engineer, I want to filter the section list by epic or completion status so I can focus on the relevant suites.",
+      "priority": "medium",
+      "captureScreenshot": false,
+      "source": "design-os-success-path",
+      "gherkin": "Feature: Suite Filtering\n\n  Scenario: Filter by epic narrows the list\n    Given the left panel shows sections from all 4 epics\n    When the user selects 'Epic 2: Section Validation' from the filter\n    Then only sections belonging to that epic are shown\n    And the epic group header is still visible\n\n  Scenario: Search by name filters in real time\n    Given the search input is focused\n    When the user types 'auth'\n    Then only sections whose names contain 'auth' are visible\n\n  Scenario: Filtering with no matches shows an empty state\n    Given the search returns no results\n    Then a message reads 'No suites match your filter'"
+    }
+  ],
+  "screenshots": [
+    {
+      "id": "ss-001",
+      "storyId": "story-001",
+      "storyTitle": "Author tests from /shape-suite output",
+      "stepIndex": 1,
+      "captureStep": "Baseline — author-tests accordion open, story list empty",
+      "imagePlaceholder": "screenshot-story-001-step1-baseline",
+      "capturedAt": "2026-05-31T09:05:00Z"
+    },
+    {
+      "id": "ss-002",
+      "storyId": "story-001",
+      "storyTitle": "Author tests from /shape-suite output",
+      "stepIndex": 2,
+      "captureStep": "After generation — 5 stories visible, first story highlighted",
+      "imagePlaceholder": "screenshot-story-001-step2-generated",
+      "capturedAt": "2026-05-31T09:05:12Z"
+    },
+    {
+      "id": "ss-003",
+      "storyId": "story-001",
+      "storyTitle": "Author tests from /shape-suite output",
+      "stepIndex": 3,
+      "captureStep": "Story selected — Gherkin preview rendered on right",
+      "imagePlaceholder": "screenshot-story-001-step3-gherkin",
+      "capturedAt": "2026-05-31T09:05:24Z"
+    },
+    {
+      "id": "ss-004",
+      "storyId": "story-001",
+      "storyTitle": "Author tests from /shape-suite output",
+      "stepIndex": 4,
+      "captureStep": "@adversarial scenario visible with oracle ref in Gherkin",
+      "imagePlaceholder": "screenshot-story-001-step4-adversarial",
+      "capturedAt": "2026-05-31T09:05:36Z"
+    },
+    {
+      "id": "ss-005",
+      "storyId": "story-001",
+      "storyTitle": "Author tests from /shape-suite output",
+      "stepIndex": 5,
+      "captureStep": "All stories reviewed — step completion indicator updated",
+      "imagePlaceholder": "screenshot-story-001-step5-complete",
+      "capturedAt": "2026-05-31T09:05:48Z"
+    },
+    {
+      "id": "ss-006",
+      "storyId": "story-002",
+      "storyTitle": "Select a story to view its Gherkin",
+      "stepIndex": 1,
+      "captureStep": "Baseline — story list visible, no story selected",
+      "imagePlaceholder": "screenshot-story-002-step1-baseline",
+      "capturedAt": "2026-05-31T09:06:00Z"
+    },
+    {
+      "id": "ss-007",
+      "storyId": "story-002",
+      "storyTitle": "Select a story to view its Gherkin",
+      "stepIndex": 2,
+      "captureStep": "Story clicked — Gherkin renders in right panel",
+      "imagePlaceholder": "screenshot-story-002-step2-gherkin",
+      "capturedAt": "2026-05-31T09:06:12Z"
+    },
+    {
+      "id": "ss-008",
+      "storyId": "story-002",
+      "storyTitle": "Select a story to view its Gherkin",
+      "stepIndex": 3,
+      "captureStep": "Active story row highlighted with cyan accent",
+      "imagePlaceholder": "screenshot-story-002-step3-highlighted",
+      "capturedAt": "2026-05-31T09:06:24Z"
+    },
+    {
+      "id": "ss-009",
+      "storyId": "story-003",
+      "storyTitle": "Mark a suite as complete",
+      "stepIndex": 1,
+      "captureStep": "Baseline — all 4 steps green, Mark Complete button enabled",
+      "imagePlaceholder": "screenshot-story-003-step1-baseline",
+      "capturedAt": "2026-05-31T09:07:00Z"
+    },
+    {
+      "id": "ss-010",
+      "storyId": "story-003",
+      "storyTitle": "Mark a suite as complete",
+      "stepIndex": 2,
+      "captureStep": "After marking — suite status updates to complete in left panel",
+      "imagePlaceholder": "screenshot-story-003-step2-complete",
+      "capturedAt": "2026-05-31T09:07:12Z"
+    }
+  ],
+  "shapeSuiteContent": {
+    "suiteId": "suite-007",
+    "scopeDescription": "Validate the 4-step Test Authoring section of Section Validation: story generation from suite scope, Gherkin preview, suite completion, suite reset, and suite filtering. All author-tests outputs must reference oracle fixtures. Edge cases include empty scope, no Gherkin yet, and reset of a complete suite.",
+    "priority": "high",
+    "coverageNotes": "Focus adversarial scenarios on the suite completion guard (cannot mark complete with unfinished steps) and the reset confirmation flow. Screenshot capture required for high-priority stories."
+  },
+  "suiteFixturesContent": {
+    "suiteId": "suite-007",
+    "fixtureJson": "{\n  \"_description\": \"Suite fixtures for Test Authoring section. Tied to oracles/section-validation.json.\",\n  \"activeSuite\": {\n    \"id\": \"suite-007\",\n    \"name\": \"Test Authoring\",\n    \"stepsComplete\": [\"shape-suite\", \"suite-fixtures\"]\n  },\n  \"generatedStories\": [\n    { \"id\": \"story-001\", \"title\": \"Author tests from /shape-suite output\", \"priority\": \"high\" },\n    { \"id\": \"story-002\", \"title\": \"Select a story to view its Gherkin\",    \"priority\": \"high\" },\n    { \"id\": \"story-003\", \"title\": \"Mark a suite as complete\",              \"priority\": \"high\" },\n    { \"id\": \"story-004\", \"title\": \"Reset a suite to re-author\",            \"priority\": \"medium\" },\n    { \"id\": \"story-005\", \"title\": \"Filter suites by epic or status\",       \"priority\": \"medium\" }\n  ]\n}"
+  }
+}

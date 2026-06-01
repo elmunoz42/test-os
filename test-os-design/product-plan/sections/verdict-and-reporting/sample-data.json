@@ -1,0 +1,537 @@
+{
+  "_meta": {
+    "models": {
+      "runSummary": "A single execution of the full test suite against the running app. Tracks the build agent used, pass/fail totals, duration, and overall status.",
+      "epic": "A top-level grouping of test results mirroring the coverage map. Contains sections, which contain stories and test cases.",
+      "section": "A sub-grouping within an epic. Corresponds to a specific screen or area of the app under test.",
+      "story": "A user story with one or more test cases. Has aggregate pass/fail counts from its test cases.",
+      "testCase": "A single executable test scenario (one Gherkin scenario). The leaf node of the result tree. Carries the actual vs expected comparison, thin-assertion flag, and fix prompt.",
+      "thinAssertionFlag": "A test case flagged as potentially hardcoded or trivially passing — no real oracle fixture behind the assertion.",
+      "coverageGap": "A section in the manifest that has no passing behavioral test case in the latest run.",
+      "agentComparison": "A single test case's results across multiple build agents, used for the Compare Agents tab."
+    },
+    "relationships": [
+      "An epic has many sections",
+      "A section has many stories",
+      "A story has many testCases",
+      "A testCase may have a fixPrompt (string, oracle-scrubbed)",
+      "A testCase may have a screenshotUrl",
+      "A runSummary references many testCases via the run ID",
+      "An agentComparison references one testCase and many runSummaries (one per agent)"
+    ]
+  },
+  "activeTab": "verdict",
+  "activeTestCaseId": "tc-007-fail",
+  "latestRun": {
+    "id": "run-2026-05-31T0200Z",
+    "timestamp": "2026-05-31T02:00:00Z",
+    "buildAgent": "cursor",
+    "executor": "hermes",
+    "totalTests": 55,
+    "passed": 49,
+    "failed": 6,
+    "skipped": 0,
+    "durationMs": 252000,
+    "status": "completed"
+  },
+  "runs": [
+    {
+      "id": "run-2026-05-31T0200Z",
+      "timestamp": "2026-05-31T02:00:00Z",
+      "buildAgent": "cursor",
+      "executor": "hermes",
+      "totalTests": 55,
+      "passed": 49,
+      "failed": 6,
+      "skipped": 0,
+      "durationMs": 252000,
+      "status": "completed"
+    },
+    {
+      "id": "run-2026-05-30T0200Z",
+      "timestamp": "2026-05-30T02:00:00Z",
+      "buildAgent": "cursor",
+      "executor": "hermes",
+      "totalTests": 55,
+      "passed": 44,
+      "failed": 11,
+      "skipped": 0,
+      "durationMs": 261000,
+      "status": "completed"
+    },
+    {
+      "id": "run-2026-05-29T0200Z",
+      "timestamp": "2026-05-29T02:00:00Z",
+      "buildAgent": "codex",
+      "executor": "hermes",
+      "totalTests": 55,
+      "passed": 38,
+      "failed": 17,
+      "skipped": 0,
+      "durationMs": 284000,
+      "status": "completed"
+    },
+    {
+      "id": "run-2026-05-28T0200Z",
+      "timestamp": "2026-05-28T02:00:00Z",
+      "buildAgent": "codex",
+      "executor": "hermes",
+      "totalTests": 55,
+      "passed": 31,
+      "failed": 24,
+      "skipped": 0,
+      "durationMs": 298000,
+      "status": "completed"
+    }
+  ],
+  "epics": [
+    {
+      "id": "epic-001",
+      "name": "Test Foundation",
+      "passed": 14,
+      "failed": 1,
+      "sections": [
+        {
+          "id": "sec-charter",
+          "name": "Charter & Scope",
+          "passed": 3,
+          "failed": 0,
+          "stories": [
+            {
+              "id": "story-cs-001",
+              "title": "Charter is generated from Design OS test.md",
+              "passed": 2,
+              "failed": 0,
+              "testCases": [
+                {
+                  "id": "tc-cs-001-happy",
+                  "title": "Charter includes scope, risk priorities, and correctness definition",
+                  "status": "passed",
+                  "gherkin": "Given the user has completed /test-charter\nWhen the charter.md file is read\nThen it contains a scope section\nAnd it contains a risk priorities table\nAnd it defines what 'correct' means for the application",
+                  "expectedBehavior": { "charterSections": ["scope", "riskPriorities", "correctnessDefinition"], "minWordCount": 100 },
+                  "actualResult": { "charterSections": ["scope", "riskPriorities", "correctnessDefinition"], "minWordCount": 312 },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                },
+                {
+                  "id": "tc-cs-001-empty",
+                  "title": "Empty Design OS test.md produces a warning, not a crash",
+                  "status": "passed",
+                  "gherkin": "Given the Design OS test.md is empty\nWhen /test-charter is run\nThen a warning message is shown\nAnd the user is prompted to provide at least minimal scope information",
+                  "expectedBehavior": { "warningShown": true, "processExits": false },
+                  "actualResult": { "warningShown": true, "processExits": false },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-oracle",
+          "name": "Oracle Data",
+          "passed": 5,
+          "failed": 0,
+          "stories": [
+            {
+              "id": "story-or-001",
+              "title": "Oracle fixtures are stored outside the app repo",
+              "passed": 3,
+              "failed": 0,
+              "testCases": [
+                {
+                  "id": "tc-or-001-path",
+                  "title": "Oracle JSON files are written to test-os/oracles/, not app repo",
+                  "status": "passed",
+                  "gherkin": "Given oracle data has been confirmed\nWhen the filesystem is inspected\nThen oracle JSON files exist under test-os/oracles/\nAnd no oracle files exist anywhere inside the app repository",
+                  "expectedBehavior": { "oraclePathPrefix": "test-os/oracles/", "appRepoOracleCount": 0 },
+                  "actualResult": { "oraclePathPrefix": "test-os/oracles/", "appRepoOracleCount": 0 },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-harness",
+          "name": "Hermes Harness",
+          "passed": 6,
+          "failed": 1,
+          "stories": [
+            {
+              "id": "story-hh-001",
+              "title": "Hermes config reads base URL from hermes-config.json",
+              "passed": 2,
+              "failed": 1,
+              "testCases": [
+                {
+                  "id": "tc-hh-001-happy",
+                  "title": "Hermes resolves the app base URL before running tests",
+                  "status": "passed",
+                  "gherkin": "Given hermes-config.json has a valid appUrl\nWhen Hermes initializes\nThen the base URL is resolved and the app is reachable",
+                  "expectedBehavior": { "baseUrlResolved": true, "appReachable": true },
+                  "actualResult": { "baseUrlResolved": true, "appReachable": true },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                },
+                {
+                  "id": "tc-hh-001-timeout",
+                  "title": "Navigation timeout config is respected",
+                  "status": "failed",
+                  "gherkin": "Given hermes-config.json sets navigation timeout to 30000ms\nWhen a page navigation exceeds the timeout\nThen the test fails with a timeout error\nAnd the error is recorded in the results JSON",
+                  "expectedBehavior": { "timeoutMs": 30000, "errorType": "NavigationTimeout", "recordedInResults": true },
+                  "actualResult": { "timeoutMs": 30000, "errorType": "GenericError", "recordedInResults": true },
+                  "errorMessage": "Expected error type 'NavigationTimeout' but received 'GenericError'. The timeout is firing but not being classified correctly in results.json.",
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": "Test 'Navigation timeout config is respected' is failing.\n\nThe test expects that when a navigation exceeds the configured timeout, the error recorded in results.json has errorType 'NavigationTimeout'. The current implementation records all timeout errors as 'GenericError'.\n\nBehavior to fix:\n- The Hermes executor should classify errors that exceed the navigation timeout specifically as NavigationTimeout rather than a generic error category\n- Check the error classification logic in the run output handler\n- The timeout value itself (30000ms) is being applied correctly — only the classification is wrong\n\nDo not reference test-os/ fixture files. Fix based on the Design OS spec and Agent OS task definitions only."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "epic-002",
+      "name": "Section Validation",
+      "passed": 18,
+      "failed": 3,
+      "sections": [
+        {
+          "id": "sec-authoring",
+          "name": "Test Authoring",
+          "passed": 8,
+          "failed": 2,
+          "stories": [
+            {
+              "id": "story-ta-001",
+              "title": "Gherkin is generated from suite scope definition",
+              "passed": 3,
+              "failed": 0,
+              "testCases": [
+                {
+                  "id": "tc-ta-001-happy",
+                  "title": "Generated Gherkin contains all behaviors from scope",
+                  "status": "passed",
+                  "gherkin": "Given a suite scope has been confirmed\nWhen /author-tests generates Gherkin\nThen each behavior in the scope has a corresponding Scenario\nAnd adversarial behaviors are tagged @adversarial\nAnd edge cases are tagged @edge-case",
+                  "expectedBehavior": { "allBehaviorsCovered": true, "adversarialTagged": true, "edgeCaseTagged": true },
+                  "actualResult": { "allBehaviorsCovered": true, "adversarialTagged": true, "edgeCaseTagged": true },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                }
+              ]
+            },
+            {
+              "id": "story-ta-002",
+              "title": "Mark suite complete is guarded against unfinished steps",
+              "passed": 2,
+              "failed": 1,
+              "testCases": [
+                {
+                  "id": "tc-ta-002-guard",
+                  "title": "Mark Complete is disabled when capture-evidence step is not_started",
+                  "status": "passed",
+                  "gherkin": "Given a suite has author-tests complete but capture-evidence not_started\nWhen the user opens the actions menu\nThen the Mark Complete option is disabled\nAnd a tooltip explains that all 4 steps must be complete",
+                  "expectedBehavior": { "markCompleteDisabled": true, "tooltipVisible": true },
+                  "actualResult": { "markCompleteDisabled": true, "tooltipVisible": true },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                },
+                {
+                  "id": "tc-ta-002-alldone",
+                  "title": "Mark Complete succeeds when all 4 steps are complete",
+                  "status": "failed",
+                  "gherkin": "Given all 4 accordion steps show status 'complete'\nWhen the user clicks Mark Complete\nThen the suite status updates to 'complete'\nAnd a completion timestamp is recorded\nAnd the next in-progress suite is auto-selected",
+                  "expectedBehavior": { "suiteStatus": "complete", "completionTimestampSet": true, "nextSuiteAutoSelected": true },
+                  "actualResult": { "suiteStatus": "complete", "completionTimestampSet": true, "nextSuiteAutoSelected": false },
+                  "errorMessage": "Suite is marked complete but the next in-progress suite is not auto-selected. The activeId state is not being advanced after the completion mutation.",
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": "Test 'Mark Complete succeeds when all 4 steps are complete' is failing.\n\nThe suite is being marked complete correctly and the completion timestamp is recorded. However, after marking a suite complete, the UI does not automatically advance to the next in-progress suite in the left panel.\n\nBehavior to fix:\n- After onMarkComplete() resolves, find the next suite with status 'in_progress' (or 'not_started' if none remain in_progress) and call onSelectSuite() with that suite's ID\n- If no other suites remain, show the phase-complete banner instead\n- The current implementation updates the suite status but does not update the activeSuiteId\n\nDo not reference test-os/ fixture files. Fix based on the Design OS spec and Agent OS task definitions only."
+                }
+              ]
+            },
+            {
+              "id": "story-ta-003",
+              "title": "Suite reset clears all step completions",
+              "passed": 3,
+              "failed": 1,
+              "testCases": [
+                {
+                  "id": "tc-ta-003-confirm",
+                  "title": "Reset requires confirmation before wiping step completions",
+                  "status": "passed",
+                  "gherkin": "Given the user clicks Reset from the actions menu\nWhen the confirmation dialog appears\nAnd the user cancels\nThen the suite is unchanged",
+                  "expectedBehavior": { "confirmationRequired": true, "suiteUnchangedOnCancel": true },
+                  "actualResult": { "confirmationRequired": true, "suiteUnchangedOnCancel": true },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                },
+                {
+                  "id": "tc-ta-003-wipe",
+                  "title": "Confirmed reset reverts all steps to not_started",
+                  "status": "failed",
+                  "gherkin": "Given the user confirms the reset action\nWhen the reset completes\nThen all 4 steps revert to 'not_started'\nAnd the suite status reverts to 'not_started'\nAnd all authored stories are cleared from the suite",
+                  "expectedBehavior": { "allStepsNotStarted": true, "suiteStatusNotStarted": true, "storiesCleared": true },
+                  "actualResult": { "allStepsNotStarted": true, "suiteStatusNotStarted": true, "storiesCleared": false },
+                  "errorMessage": "Steps and suite status are correctly reset but authored stories are not cleared from the data layer. The stories array for the suite still contains the previously authored test cases.",
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": "Test 'Confirmed reset reverts all steps to not_started' is failing.\n\nThe suite status and step statuses are correctly reset to 'not_started'. However, the authored stories for the suite are not cleared when a reset is performed.\n\nBehavior to fix:\n- When onResetSuite() is called, the stories associated with that suiteId should also be removed from the stories collection\n- The current implementation only resets the step status objects — it does not clear the authored content\n- After reset, the author-tests accordion body should show the empty state (no stories)\n\nDo not reference test-os/ fixture files. Fix based on the Design OS spec and Agent OS task definitions only."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-evidence",
+          "name": "Evidence Capture",
+          "passed": 10,
+          "failed": 1,
+          "stories": [
+            {
+              "id": "story-ev-001",
+              "title": "Screenshot gallery shows up to 5 slots per story",
+              "passed": 4,
+              "failed": 0,
+              "testCases": [
+                {
+                  "id": "tc-ev-001-slots",
+                  "title": "Gallery renders exactly 5 slots for each captureScreenshot story",
+                  "status": "passed",
+                  "gherkin": "Given a high-priority story has captureScreenshot set to true\nWhen the capture-evidence accordion step is expanded\nThen exactly 5 filmstrip slots are shown for that story\nAnd captured slots show a thumbnail placeholder and step description\nAnd uncaptured slots show a dashed outline with the step index",
+                  "expectedBehavior": { "slotsPerStory": 5, "capturedSlotsHaveThumbnail": true, "emptySlotsDashed": true },
+                  "actualResult": { "slotsPerStory": 5, "capturedSlotsHaveThumbnail": true, "emptySlotsDashed": true },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": "evidence/screenshots/story-ev-001-baseline.png",
+                  "fixPrompt": null
+                }
+              ]
+            },
+            {
+              "id": "story-ev-002",
+              "title": "Counter shows captured/total per story",
+              "passed": 2,
+              "failed": 1,
+              "testCases": [
+                {
+                  "id": "tc-ev-002-counter",
+                  "title": "Counter updates when a new screenshot is captured",
+                  "status": "failed",
+                  "gherkin": "Given a story has 3 screenshots captured out of 5\nWhen a new screenshot is captured for step 4\nThen the counter updates from '3/5' to '4/5'\nAnd the newly captured slot transitions from dashed to filled",
+                  "expectedBehavior": { "counterAfterCapture": "4/5", "slotTransition": "dashed-to-filled" },
+                  "actualResult": { "counterAfterCapture": "3/5", "slotTransition": "no-change" },
+                  "errorMessage": "The counter does not update reactively when a new screenshot is added. The screenshots prop is not being re-evaluated after a capture event — the component is showing stale data.",
+                  "thinAssertionFlag": true,
+                  "screenshotUrl": null,
+                  "fixPrompt": "Test 'Counter updates when a new screenshot is captured' is failing.\n\nThe screenshot gallery counter (X/5) is not updating when a new screenshot is captured. The slot also does not transition from dashed to filled.\n\nBehavior to fix:\n- The capture-evidence accordion body derives screenshot counts from the screenshots prop — ensure the parent component triggers a re-render with updated screenshot data after a capture event fires\n- The component may be memoizing stale screenshot counts; ensure the filmstrip re-derives from props, not from local state initialized at mount time\n\nDo not reference test-os/ fixture files. Fix based on the Design OS spec and Agent OS task definitions only."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "epic-003",
+      "name": "Verdict & Reporting",
+      "passed": 10,
+      "failed": 2,
+      "sections": [
+        {
+          "id": "sec-htmlreport",
+          "name": "HTML Report",
+          "passed": 6,
+          "failed": 1,
+          "stories": [
+            {
+              "id": "story-hr-001",
+              "title": "Export report opens report.html in a new tab",
+              "passed": 2,
+              "failed": 1,
+              "testCases": [
+                {
+                  "id": "tc-hr-001-export",
+                  "title": "Export Report opens a new browser tab pointing to report.html",
+                  "status": "failed",
+                  "gherkin": "Given the verdict dashboard is loaded\nWhen the user clicks Export Report\nThen a new browser tab opens\nAnd it loads the static report.html file from the workspace root",
+                  "expectedBehavior": { "newTabOpened": true, "urlPath": "/report.html" },
+                  "actualResult": { "newTabOpened": false, "urlPath": null },
+                  "errorMessage": "Clicking Export Report does nothing. The button has no href or onClick handler wired up. The onExportReport callback is not being called.",
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": "Test 'Export Report opens a new browser tab pointing to report.html' is failing.\n\nThe Export Report button is rendered but clicking it does not open a new tab or call any handler.\n\nBehavior to fix:\n- The Export Report button should call onExportReport() when clicked, or alternatively render as an anchor tag with href='/report.html' and target='_blank'\n- Verify the button has the correct event handler attached in the verdict dashboard component\n\nDo not reference test-os/ fixture files. Fix based on the Design OS spec and Agent OS task definitions only."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-fixprompts",
+          "name": "Fix Prompts",
+          "passed": 4,
+          "failed": 1,
+          "stories": [
+            {
+              "id": "story-fp-001",
+              "title": "Emit Fix Prompt copies scrubbed prompt to clipboard",
+              "passed": 3,
+              "failed": 1,
+              "testCases": [
+                {
+                  "id": "tc-fp-001-copy",
+                  "title": "Copied prompt does not contain oracle values",
+                  "status": "passed",
+                  "gherkin": "Given a failed test case has a fixPrompt\nWhen the user clicks Emit Fix Prompt\nThen the prompt is copied to the clipboard\nAnd the prompt text does not contain any oracle fixture values\nAnd a 'Copied!' toast appears for 2 seconds",
+                  "expectedBehavior": { "clipboardUpdated": true, "oracleValuesAbsent": true, "toastDuration": 2000 },
+                  "actualResult": { "clipboardUpdated": true, "oracleValuesAbsent": true, "toastDuration": 2000 },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                },
+                {
+                  "id": "tc-fp-001-thin",
+                  "title": "Thin-assertion flag is displayed on flagged test case rows",
+                  "status": "failed",
+                  "gherkin": "Given a test case has thinAssertionFlag set to true\nWhen the result tree is rendered\nThen the test case row shows a thin-assertion indicator\nAnd the thin-assertion flags section lists this test case",
+                  "expectedBehavior": { "rowIndicatorVisible": true, "listedInFlagsSection": true },
+                  "actualResult": { "rowIndicatorVisible": false, "listedInFlagsSection": true },
+                  "errorMessage": "The test case is correctly listed in the thin-assertion flags section but the inline row indicator is not rendered on the test case row in the result tree.",
+                  "thinAssertionFlag": true,
+                  "screenshotUrl": null,
+                  "fixPrompt": "Test 'Thin-assertion flag is displayed on flagged test case rows' is failing.\n\nTest cases with thinAssertionFlag=true appear in the thin-assertions section but do not show an inline indicator on their row in the result tree.\n\nBehavior to fix:\n- The test case row component should check the thinAssertionFlag field and render an amber indicator (icon or badge) when true\n- The indicator should appear alongside the pass/fail status icon on the row\n\nDo not reference test-os/ fixture files. Fix based on the Design OS spec and Agent OS task definitions only."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "epic-004",
+      "name": "Deployment & Automation",
+      "passed": 7,
+      "failed": 0,
+      "sections": [
+        {
+          "id": "sec-cron",
+          "name": "Cron Schedule",
+          "passed": 4,
+          "failed": 0,
+          "stories": [
+            {
+              "id": "story-cr-001",
+              "title": "Nightly cron job runs at 02:00 UTC",
+              "passed": 2,
+              "failed": 0,
+              "testCases": [
+                {
+                  "id": "tc-cr-001-schedule",
+                  "title": "Cron entry is set to 0 2 * * * in crontab",
+                  "status": "passed",
+                  "gherkin": "Given the cron schedule has been configured\nWhen the crontab is inspected\nThen the run-tests.sh entry is scheduled for 0 2 * * *",
+                  "expectedBehavior": { "cronExpression": "0 2 * * *", "scriptPath": "/home/ubuntu/test-os/run-tests.sh" },
+                  "actualResult": { "cronExpression": "0 2 * * *", "scriptPath": "/home/ubuntu/test-os/run-tests.sh" },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sec-persistence",
+          "name": "Results Persistence",
+          "passed": 3,
+          "failed": 0,
+          "stories": [
+            {
+              "id": "story-rp-001",
+              "title": "Run results are committed back to the Test OS repo",
+              "passed": 3,
+              "failed": 0,
+              "testCases": [
+                {
+                  "id": "tc-rp-001-commit",
+                  "title": "results.json and report.html are committed after each run",
+                  "status": "passed",
+                  "gherkin": "Given a test run has completed\nWhen run-tests.sh finishes\nThen runs/<run-id>/results.json is committed to the Test OS repo\nAnd report.html is committed to the repo root\nAnd the commit message includes the run timestamp",
+                  "expectedBehavior": { "resultsJsonCommitted": true, "reportHtmlCommitted": true, "commitMessageHasTimestamp": true },
+                  "actualResult": { "resultsJsonCommitted": true, "reportHtmlCommitted": true, "commitMessageHasTimestamp": true },
+                  "errorMessage": null,
+                  "thinAssertionFlag": false,
+                  "screenshotUrl": null,
+                  "fixPrompt": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "thinAssertions": [
+    {
+      "testCaseId": "tc-ev-002-counter",
+      "testCaseTitle": "Counter updates when a new screenshot is captured",
+      "storyTitle": "Counter shows captured/total per story",
+      "reason": "Assertion checks UI counter display only; no underlying data fixture verifies the capture event was stored. Test could pass against a hardcoded counter label."
+    },
+    {
+      "testCaseId": "tc-fp-001-thin",
+      "testCaseTitle": "Thin-assertion flag is displayed on flagged test case rows",
+      "storyTitle": "Emit Fix Prompt copies scrubbed prompt to clipboard",
+      "reason": "Expected value 'rowIndicatorVisible: true' is asserted via DOM presence check only; no oracle fixture ties the indicator to the actual thinAssertionFlag data field."
+    },
+    {
+      "testCaseId": "tc-cr-001-schedule",
+      "testCaseTitle": "Cron entry is set to 0 2 * * * in crontab",
+      "storyTitle": "Nightly cron job runs at 02:00 UTC",
+      "reason": "Test asserts cron expression by string match against a static constant. No fixture validates that the cron actually runs — only that the string is present."
+    }
+  ],
+  "coverageGaps": [
+    {
+      "sectionId": "sec-coverage-map",
+      "sectionName": "Coverage Map",
+      "epicName": "Test Foundation",
+      "reason": "No behavioral test cases authored for coverage map generation flow. Only structural tests exist."
+    },
+    {
+      "sectionId": "sec-ec2-setup",
+      "sectionName": "EC2 Setup",
+      "epicName": "Deployment & Automation",
+      "reason": "Infrastructure setup section — no behavioral tests authored yet. Deferred to v0.5."
+    }
+  ],
+  "agentComparisons": [
+    { "testCaseId": "tc-hh-001-timeout",  "testCaseTitle": "Navigation timeout config is respected",          "storyTitle": "Hermes config reads base URL",             "results": { "cursor": "failed",  "codex": "failed"  } },
+    { "testCaseId": "tc-ta-002-alldone",  "testCaseTitle": "Mark Complete succeeds when all 4 steps done",    "storyTitle": "Mark suite complete is guarded",          "results": { "cursor": "failed",  "codex": "passed"  } },
+    { "testCaseId": "tc-ta-003-wipe",     "testCaseTitle": "Confirmed reset reverts all steps to not_started","storyTitle": "Suite reset clears all step completions", "results": { "cursor": "failed",  "codex": "passed"  } },
+    { "testCaseId": "tc-ev-002-counter",  "testCaseTitle": "Counter updates when a new screenshot is captured","storyTitle": "Counter shows captured/total per story",  "results": { "cursor": "failed",  "codex": "failed"  } },
+    { "testCaseId": "tc-hr-001-export",   "testCaseTitle": "Export Report opens report.html in a new tab",   "storyTitle": "Export report opens report.html",         "results": { "cursor": "failed",  "codex": "passed"  } },
+    { "testCaseId": "tc-fp-001-thin",     "testCaseTitle": "Thin-assertion flag displayed on test case rows", "storyTitle": "Emit Fix Prompt copies scrubbed prompt",  "results": { "cursor": "failed",  "codex": "failed"  } },
+    { "testCaseId": "tc-cs-001-happy",    "testCaseTitle": "Charter includes scope and risk priorities",      "storyTitle": "Charter is generated from Design OS",     "results": { "cursor": "passed",  "codex": "passed"  } },
+    { "testCaseId": "tc-or-001-path",     "testCaseTitle": "Oracle JSON files in test-os/oracles/, not app",  "storyTitle": "Oracle fixtures stored outside app repo", "results": { "cursor": "passed",  "codex": "passed"  } }
+  ]
+}

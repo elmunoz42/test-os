@@ -1,0 +1,13 @@
+/* Design Tokens — Test OS */
+
+:root {
+  /* Colors (Tailwind palette names) */
+  --color-primary: cyan;       /* buttons, links, active states, key accents */
+  --color-secondary: violet;   /* tags, oracle badges, secondary highlights */
+  --color-neutral: zinc;       /* backgrounds, borders, muted text */
+
+  /* Typography */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
