@@ -5,6 +5,10 @@ import { TestFoundation } from './features/test-foundation'
 import { useFoundationState } from './features/test-foundation/useFoundationState'
 import { SectionValidation } from './features/section-validation'
 import { useSectionValidationState } from './features/section-validation/useSectionValidationState'
+import { VerdictAndReporting } from './features/verdict-and-reporting'
+import { useVerdictState } from './features/verdict-and-reporting/useVerdictState'
+import { DeploymentAndAutomation } from './features/deployment-and-automation'
+import { useDeploymentState } from './features/deployment-and-automation/useDeploymentState'
 
 const ROUTES = {
   foundation: '/foundation',
@@ -60,11 +64,15 @@ function LockedRoutePlaceholder({
   title,
   foundationLocked,
   validationComplete,
+  verdictRunCount,
+  deploymentActive,
   onGoFoundation,
 }: {
   title: string
   foundationLocked: boolean
   validationComplete: boolean
+  verdictRunCount: number
+  deploymentActive: boolean
   onGoFoundation: () => void
 }) {
   return (
@@ -90,6 +98,12 @@ function LockedRoutePlaceholder({
               <span className="rounded border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 font-mono text-xs text-zinc-500">
                 validation: {validationComplete ? 'complete' : 'authoring'}
               </span>
+              <span className="rounded border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 font-mono text-xs text-zinc-500">
+                runs: {verdictRunCount}
+              </span>
+              <span className="rounded border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 font-mono text-xs text-zinc-500">
+                runner: {deploymentActive ? 'active' : 'setup'}
+              </span>
               <button
                 onClick={onGoFoundation}
                 className="inline-flex items-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-sm font-semibold text-cyan-300 transition hover:border-cyan-400 hover:bg-cyan-500/20"
@@ -109,11 +123,10 @@ export function App() {
   const { activeHref, navigate } = useLocalRoute()
   const foundation = useFoundationState()
   const validation = useSectionValidationState()
+  const verdict = useVerdictState()
+  const deployment = useDeploymentState()
   const isFoundationLocked = foundation.phase.status === 'locked'
-  const runCount = useMemo(
-    () => (validation.phaseComplete ? 2 : isFoundationLocked ? 1 : 0),
-    [isFoundationLocked, validation.phaseComplete]
-  )
+  const runCount = useMemo(() => verdict.runs.length, [verdict.runs.length])
 
   return (
     <AppShell
@@ -169,11 +182,62 @@ export function App() {
             Reset validation demo
           </button>
         </div>
+      ) : activeHref === ROUTES.verdict ? (
+        <div className="relative h-full">
+          <VerdictAndReporting
+            latestRun={verdict.latestRun}
+            runs={verdict.runs}
+            epics={verdict.epics}
+            thinAssertions={verdict.thinAssertions}
+            coverageGaps={verdict.coverageGaps}
+            agentComparisons={verdict.agentComparisons}
+            activeTab={verdict.activeTab}
+            activeTestCaseId={verdict.activeTestCaseId}
+            onTabChange={verdict.selectTab}
+            onSelectTestCase={verdict.selectTestCase}
+            onClosePanel={verdict.closePanel}
+            onSelectRun={verdict.selectRun}
+            onEmitFixPrompt={verdict.emitFixPrompt}
+            onRunValidation={verdict.noteRunValidation}
+            onExportReport={verdict.noteExportReport}
+          />
+          <button
+            type="button"
+            onClick={verdict.resetDemoState}
+            className="fixed bottom-4 right-4 inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/95 px-3 py-2 text-xs font-medium text-zinc-400 shadow-xl shadow-black/30 transition hover:border-zinc-700 hover:text-zinc-200"
+          >
+            <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.8} />
+            Reset verdict demo
+          </button>
+        </div>
+      ) : activeHref === ROUTES.deployment ? (
+        <div className="relative h-full">
+          <DeploymentAndAutomation
+            mode={deployment.mode}
+            steps={deployment.steps}
+            instanceStatus={deployment.instanceStatus}
+            cronConfig={deployment.cronConfig}
+            logLines={deployment.logLines}
+            onConfirmStep={deployment.confirmStep}
+            onCopyCommand={deployment.copyCommand}
+            onRefreshLog={deployment.refreshLog}
+          />
+          <button
+            type="button"
+            onClick={deployment.resetDemoState}
+            className="fixed bottom-4 right-4 inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/95 px-3 py-2 text-xs font-medium text-zinc-400 shadow-xl shadow-black/30 transition hover:border-zinc-700 hover:text-zinc-200"
+          >
+            <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.8} />
+            Reset deployment demo
+          </button>
+        </div>
       ) : (
         <LockedRoutePlaceholder
           title={routeTitles[activeHref] ?? 'Test OS'}
           foundationLocked={isFoundationLocked}
           validationComplete={validation.phaseComplete}
+          verdictRunCount={verdict.runs.length}
+          deploymentActive={deployment.isDeployed}
           onGoFoundation={() => navigate(ROUTES.foundation)}
         />
       )}

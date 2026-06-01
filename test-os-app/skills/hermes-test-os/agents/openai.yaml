@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hermes Test OS"
+  short_description: "Use the Test OS app with Hermes validation workflows."
+  default_prompt: "Use the Hermes Test OS skill to plan, inspect, run, and report validation work in this Test OS app."
