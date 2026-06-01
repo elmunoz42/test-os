@@ -3,6 +3,8 @@ import { ArrowRight, Lock, RotateCcw } from 'lucide-react'
 import { AppShell } from './components/shell'
 import { TestFoundation } from './features/test-foundation'
 import { useFoundationState } from './features/test-foundation/useFoundationState'
+import { SectionValidation } from './features/section-validation'
+import { useSectionValidationState } from './features/section-validation/useSectionValidationState'
 
 const ROUTES = {
   foundation: '/foundation',
@@ -57,10 +59,12 @@ function useLocalRoute() {
 function LockedRoutePlaceholder({
   title,
   foundationLocked,
+  validationComplete,
   onGoFoundation,
 }: {
   title: string
   foundationLocked: boolean
+  validationComplete: boolean
   onGoFoundation: () => void
 }) {
   return (
@@ -83,6 +87,9 @@ function LockedRoutePlaceholder({
               <span className="rounded border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 font-mono text-xs text-zinc-500">
                 foundation: {foundationLocked ? 'locked' : 'in progress'}
               </span>
+              <span className="rounded border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 font-mono text-xs text-zinc-500">
+                validation: {validationComplete ? 'complete' : 'authoring'}
+              </span>
               <button
                 onClick={onGoFoundation}
                 className="inline-flex items-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-sm font-semibold text-cyan-300 transition hover:border-cyan-400 hover:bg-cyan-500/20"
@@ -101,8 +108,12 @@ function LockedRoutePlaceholder({
 export function App() {
   const { activeHref, navigate } = useLocalRoute()
   const foundation = useFoundationState()
+  const validation = useSectionValidationState()
   const isFoundationLocked = foundation.phase.status === 'locked'
-  const runCount = useMemo(() => (isFoundationLocked ? 1 : 0), [isFoundationLocked])
+  const runCount = useMemo(
+    () => (validation.phaseComplete ? 2 : isFoundationLocked ? 1 : 0),
+    [isFoundationLocked, validation.phaseComplete]
+  )
 
   return (
     <AppShell
@@ -130,10 +141,39 @@ export function App() {
             Reset demo state
           </button>
         </div>
+      ) : activeHref === ROUTES.validation ? (
+        <div className="relative h-full">
+          <SectionValidation
+            epics={validation.epics}
+            suites={validation.suites}
+            stories={validation.stories}
+            screenshots={validation.screenshots}
+            activeSuiteId={validation.activeSuiteId}
+            activeStoryId={validation.activeStoryId}
+            filter={validation.filter}
+            shapeSuiteContent={validation.shapeSuiteContent}
+            suiteFixturesContent={validation.suiteFixturesContent}
+            onSelectSuite={validation.selectSuite}
+            onSelectStory={validation.selectStory}
+            onFilterChange={validation.updateFilter}
+            onMarkComplete={validation.markComplete}
+            onResetSuite={validation.resetSuite}
+            onToggleStep={validation.toggleStep}
+          />
+          <button
+            type="button"
+            onClick={validation.resetDemoState}
+            className="fixed bottom-4 right-4 inline-flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/95 px-3 py-2 text-xs font-medium text-zinc-400 shadow-xl shadow-black/30 transition hover:border-zinc-700 hover:text-zinc-200"
+          >
+            <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.8} />
+            Reset validation demo
+          </button>
+        </div>
       ) : (
         <LockedRoutePlaceholder
           title={routeTitles[activeHref] ?? 'Test OS'}
           foundationLocked={isFoundationLocked}
+          validationComplete={validation.phaseComplete}
           onGoFoundation={() => navigate(ROUTES.foundation)}
         />
       )}
