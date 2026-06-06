@@ -1,6 +1,6 @@
 ---
 name: hermes-test-os
-description: Use when Codex needs to operate, extend, test, or troubleshoot the Test OS app and its Hermes validation workflow, including foundation setup, section validation suites, verdict reporting, fix prompt emission, run history, build-agent comparison, EC2/cron deployment automation, or any request mentioning Hermes agent, Test OS validation, hidden oracles, results.json, report.html, run-tests.sh, or /test-os commands.
+description: Use when Codex needs to operate, adapt, extend, test, or troubleshoot the Test OS app and its Hermes validation workflow for a given project, including foundation setup, section validation suites, verdict reporting, fix prompt emission, run history, build-agent comparison, EC2/cron deployment automation, or any request mentioning Hermes agent, Test OS validation, hidden oracles, project adaptation, results.json, report.html, run-tests.sh, or /test-os commands.
 ---
 
 # Hermes Test OS
@@ -45,6 +45,37 @@ description: Use when Codex needs to operate, extend, test, or troubleshoot the 
    - Keep route placeholders lightweight and visual-only unless the user asks for real guards.
    - Normalize sample command mentions with `/test-os:name-of-command`.
    - Update matching `.claude/commands/test-os/` and `.cursor/commands/test-os/` docs when adding commands.
+
+## Adapt Test OS to a Project
+
+Use this workflow when the user asks Hermes/Codex to adapt Test OS for a specific app or repository.
+
+1. Inspect the target project first:
+   - product docs, README, routes, user workflows, data models, and existing tests
+   - package scripts or run commands
+   - screenshots, fixtures, seeds, or API contracts if present
+
+2. Convert project context into Test OS state:
+   - Foundation: app charter, personas, critical journeys, acceptance criteria, oracle boundaries, and Hermes config
+   - Section Validation: epics, user stories, Gherkin cases, suite priorities, fixture needs, and evidence plans
+   - Verdict: expected result taxonomy, failure categories, fix-prompt style, and agent comparison dimensions
+   - Deployment: local or remote runner commands, environment variables, cron cadence, log paths, and report path
+
+3. Update local sample/state sources rather than hard-coding UI copy:
+   - `product-plan/sections/*/sample-data.json`
+   - `src/data/*Sample.ts` only when normalization needs to change
+   - feature types only when the target project requires new fields
+
+4. Preserve validation integrity:
+   - keep oracle fixtures and hidden expected values inside Test OS-owned data
+   - never write hidden oracle values into build-agent prompts, app-under-test files, public docs, or emitted fix prompts
+   - scrub fix prompts so they describe behavior and failure evidence without leaking hidden answers
+
+5. Deliver a project handoff:
+   - list adapted routes/suites
+   - list any required manual project inputs
+   - state which flows remain mocked/local
+   - run `npm run build` and smoke-check the primary adapted route
 
 ## Useful Commands
 
